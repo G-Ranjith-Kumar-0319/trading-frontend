@@ -221,11 +221,16 @@ function App() {
     return () => clearInterval(interval);
   }, [fetchEvents]);
 
-  const filteredEvents = events.filter(
-    (event) =>
-      event.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.message?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEvents = events.filter((event) => {
+    const searchTermLower = searchTerm.toLowerCase().trim();
+    const tickerMatch = (event.ticker || "")
+      .toLowerCase()
+      .includes(searchTermLower);
+    const messageMatch = (event.message || "")
+      .toLowerCase()
+      .includes(searchTermLower);
+    return tickerMatch || messageMatch;
+  });
 
   const handleCloseError = () => {
     setError(null);
